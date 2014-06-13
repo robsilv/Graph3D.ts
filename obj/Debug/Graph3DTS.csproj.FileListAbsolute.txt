@@ -1,0 +1,5 @@
+D:\github\Graph3D.ts\bin\Graph3DTS.dll.config
+D:\github\Graph3D.ts\bin\Graph3DTS.dll
+D:\github\Graph3D.ts\bin\Graph3DTS.pdb
+D:\github\Graph3D.ts\obj\Debug\Graph3DTS.dll
+D:\github\Graph3D.ts\obj\Debug\Graph3DTS.pdb
