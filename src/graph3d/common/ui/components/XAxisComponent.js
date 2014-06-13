@@ -61,6 +61,9 @@ var XAxisComponent = (function (_super) {
             rotation: new THREE.Vector3(0, 0, 0)
         };
 
+        console.log("getXTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
+        console.log("getXTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
+
         return state;
     };
     XAxisComponent.prototype._getTitleBottomState = function (text) {
@@ -69,7 +72,7 @@ var XAxisComponent = (function (_super) {
 
         var state = {
             position: new THREE.Vector3(centreOffset + this._axisLength / 2, -140, 0),
-            rotation: new THREE.Vector3(Math.PI, 0, 0)
+            rotation: new THREE.Euler(Math.PI, 0, 0)
         };
 
         return state;

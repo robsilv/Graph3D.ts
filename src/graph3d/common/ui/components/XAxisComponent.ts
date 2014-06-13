@@ -32,7 +32,7 @@ class XAxisComponent extends AxisComponent
 	{
 		return new THREE.Vector3(step, 0, 0);
 	}
-	private _getAxisMarkerPosLog(step:number):THREE.Vector3
+    public _getAxisMarkerPosLog(step:number):THREE.Vector3
 	{
 		return new THREE.Vector3(step, 0, 0);
 	}
@@ -41,7 +41,7 @@ class XAxisComponent extends AxisComponent
 	{
 		return { position: new THREE.Vector3(-this._defaultTextSize/2, -50, 0), rotation: new THREE.Vector3(0, 0, Math.PI + Math.PI/2) };
 	}
-	private _getMarkerBottomState(text:THREE.Object3D):any
+    public _getMarkerBottomState(text:THREE.Object3D):any
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var rightOffset = -1 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
@@ -64,16 +64,19 @@ class XAxisComponent extends AxisComponent
             rotation: new THREE.Vector3(0, 0, 0)
         };
 
+        console.log("getXTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " +state.position.z);
+        console.log("getXTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
+
 		return state;
 	}
-	private _getTitleBottomState(text:THREE.Object3D):any
+	public _getTitleBottomState(text:THREE.Object3D):any
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
 			
         var state = {
             position: new THREE.Vector3(centreOffset + this._axisLength / 2, -140, 0),
-            rotation: new THREE.Vector3(Math.PI, 0, 0)
+            rotation: new THREE.Euler(Math.PI, 0, 0)
         };
 						  
 		return state;
@@ -98,7 +101,7 @@ class XAxisComponent extends AxisComponent
 		return obj;
 	}
 		
-	private _getBottomAxisAnimValues():any
+    public _getBottomAxisAnimValues():any
 	{
 		var obj = { animLength: 1000,
 					animObj: { rX: this.container.rotation.x },

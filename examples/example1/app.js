@@ -4,7 +4,6 @@
 
 var Example1 = (function () {
     function Example1() {
-        //TWEEN.start();
         var graphView = GraphView.create();
         var dataModel = DataModel.create();
         dataModel.addEventListener("loadComplete", function () {

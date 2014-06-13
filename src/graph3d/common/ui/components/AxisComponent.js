@@ -1,4 +1,4 @@
-//var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.components");
+﻿//var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.components");
 var AxisComponent = (function () {
     function AxisComponent(axisLength, defaultTextSize) {
         this._init(axisLength, defaultTextSize);
@@ -104,8 +104,16 @@ var AxisComponent = (function () {
 
         state = this._getTitleInitState(text);
 
-        text.position = state.position;
-        text.rotation = state.rotation;
+        // Bug to do with setting position & rotation, setting x, y, z gets around it
+        //text.position = state.position;
+        text.position.x = state.position.x;
+        text.position.y = state.position.y;
+        text.position.z = state.position.z;
+
+        //text.rotation = state.rotation;
+        text.rotation.x = state.rotation.x;
+        text.rotation.y = state.rotation.y;
+        text.rotation.z = state.rotation.z;
 
         this.container.add(text);
         this.titleText = text;
@@ -113,6 +121,7 @@ var AxisComponent = (function () {
         var mesh = text.children[0];
         mesh.material.opacity = 0;
 
+        //console.log("MESH " + mesh + " material " + mesh.material + " opacity " + mesh.material.opacity);
         // animate in titles
         var animInitObj = this._getTitleInitAnimValues(state);
         this.animationValues.titleText = animInitObj.animObj;

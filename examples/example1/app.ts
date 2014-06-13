@@ -5,7 +5,6 @@
 class Example1 {
 
     constructor() {
-        //TWEEN.start();
 
         var graphView = GraphView.create();
         var dataModel = DataModel.create();

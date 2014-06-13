@@ -137,15 +137,23 @@ class AxisComponent {
 		var text = this._createText(title, 20);
 			
 		state = this._getTitleInitState(text);
-			
-		text.position = state.position;
-		text.rotation = state.rotation;
-			
+		
+        // Bug to do with setting position & rotation, setting x, y, z gets around it	
+        //text.position = state.position;
+        text.position.x = state.position.x;
+        text.position.y = state.position.y;
+        text.position.z = state.position.z;
+        //text.rotation = state.rotation;
+        text.rotation.x = state.rotation.x;
+        text.rotation.y = state.rotation.y;
+        text.rotation.z = state.rotation.z;
+
 		this.container.add( text );
 		this.titleText = text;
 	    
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
         mesh.material.opacity = 0;
+        //console.log("MESH " + mesh + " material " + mesh.material + " opacity " + mesh.material.opacity);
 			
 		// animate in titles
 		var animInitObj = this._getTitleInitAnimValues(state);

@@ -1,9 +1,4 @@
 //var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.views");
-//var GraphUtils = GRAPH3D.namespace("GRAPH3D.common.util").GraphUtils;
-//var XAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").XAxisComponent;
-//var YAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").YAxisComponent;
-//var ZAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").ZAxisComponent;
-//var ListenerFunctions = GRAPH3D.namespace("GRAPH3D.utils.events").ListenerFunctions;
 var GraphView = (function () {
     function GraphView() {
         var _this = this;
@@ -78,6 +73,7 @@ var GraphView = (function () {
                 _this._targetRotationX = _this._targetRotationXOnMouseDown + (_this._mouseY - _this._mouseYOnMouseDown) * 0.05;
             }
         };
+        // Callback
         this._updateTime = function () {
             /*
             this._camera.rotation.x = this._cameraValues.camRX;
@@ -118,11 +114,13 @@ var GraphView = (function () {
             _this._yAxis.updateAxis();
             _this._zAxis.updateAxis();
         };
+        // Callback
         this._updateAxesText = function () {
             _this._xAxis.updateAxisText();
             _this._yAxis.updateAxisText();
             _this._zAxis.updateAxisText();
         };
+        // Callback
         this._completeTime = function () {
             _this._freeRotate = true;
         };
@@ -159,7 +157,7 @@ var GraphView = (function () {
 
     GraphView.prototype._init = function () {
         // Styles
-        this._gridLineColor = 0x444444;
+        this._gridLineColor = 0xAAAAAA;
         this._gridLineOpacity = 1;
 
         this._defaultTextSize = 16;
@@ -170,21 +168,18 @@ var GraphView = (function () {
 
         this._psTable = {}; // Table for particle systems
         this.dataProvider = null;
-        this._graphUtils = GraphUtils.create();
+        this._graphUtils = new GraphUtils(); //GraphUtils.create();
 
-        //this._updateTimeCallback = ListenerFunctions.createListenerFunction(this, this._updateTime);
-        //this._updateAxesTextCallback = ListenerFunctions.createListenerFunction(this, this._updateAxesText);
-        //this._completeTimeCallback = ListenerFunctions.createListenerFunction(this, this._completeTime);
         this._xAxis = XAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._xAxis.updateAxesTextCallback = this._updateAxesText; //this._updateAxesTextCallback;
+        this._xAxis.updateAxesTextCallback = this._updateAxesText;
         this._xAxis.updateTimeCallback = this._updateTime;
 
         this._yAxis = YAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._yAxis.updateAxesTextCallback = this._updateAxesText; //this._updateAxesTextCallback;
+        this._yAxis.updateAxesTextCallback = this._updateAxesText;
         this._yAxis.updateTimeCallback = this._updateTime;
 
         this._zAxis = ZAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._zAxis.updateAxesTextCallback = this._updateAxesText; //this._updateAxesTextCallback;
+        this._zAxis.updateAxesTextCallback = this._updateAxesText;
         this._zAxis.updateTimeCallback = this._updateTime;
 
         this._offsetTop = 0; //window.innerHeight/4*3;
@@ -207,7 +202,7 @@ var GraphView = (function () {
         //this._fixedCameraPos = new THREE.Vector3(0, 0, 0);
         //this._dynamicCameraPos = new THREE.Vector3(200, 100, 200);
         var distance = 2500;
-        this._camera = new THREE.CombinedCamera(window.innerWidth / 2, window.innerHeight / 2, 70, 1, distance, -distance, distance); //, distance);
+        this._camera = new THREE.CombinedCamera(window.innerWidth / 2, window.innerHeight / 2, 70, 1, distance, -distance, distance);
 
         this._scene = new THREE.Scene();
 
@@ -222,6 +217,27 @@ var GraphView = (function () {
         this._graphObj.position.z = this._axisLength / 2;
 
         // Lights
+        this._setupLights();
+
+        //this._renderer = new THREE.CanvasRenderer();
+        this._renderer = new THREE.WebGLRenderer({ antialias: true });
+        this._renderer.setClearColor(0xf0f0f0);
+        this._renderer.setSize(window.innerWidth, window.innerHeight);
+
+        this._container.appendChild(this._renderer.domElement);
+
+        this._stats = new Stats();
+        this._stats.domElement.style.position = 'absolute';
+        this._stats.domElement.style.top = '0px';
+        this._container.appendChild(this._stats.domElement);
+
+        var scope = this;
+        window.addEventListener('resize', function () {
+            scope._onWindowResize();
+        }, false);
+    };
+
+    GraphView.prototype._setupLights = function () {
         var ambientLight = new THREE.AmbientLight(Math.random() * 0x10);
         this._scene.add(ambientLight);
 
@@ -238,22 +254,6 @@ var GraphView = (function () {
         directionalLight.position.z = Math.random() - 0.5;
         directionalLight.position.normalize();
         this._scene.add(directionalLight);
-
-        //this._renderer = new THREE.CanvasRenderer();
-        this._renderer = new THREE.WebGLRenderer({ antialias: true });
-        this._renderer.setSize(window.innerWidth, window.innerHeight);
-
-        this._container.appendChild(this._renderer.domElement);
-
-        this._stats = new Stats();
-        this._stats.domElement.style.position = 'absolute';
-        this._stats.domElement.style.top = '0px';
-        this._container.appendChild(this._stats.domElement);
-
-        var scope = this;
-        window.addEventListener('resize', function () {
-            scope._onWindowResize();
-        }, false);
     };
 
     GraphView.prototype.destroy = function () {

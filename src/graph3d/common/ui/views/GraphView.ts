@@ -1,9 +1,4 @@
 //var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.views");
-//var GraphUtils = GRAPH3D.namespace("GRAPH3D.common.util").GraphUtils;
-//var XAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").XAxisComponent;
-//var YAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").YAxisComponent;
-//var ZAxisComponent = GRAPH3D.namespace("GRAPH3D.common.ui.components").ZAxisComponent;
-//var ListenerFunctions = GRAPH3D.namespace("GRAPH3D.utils.events").ListenerFunctions;
 
 class GraphView {
 
@@ -97,7 +92,7 @@ class GraphView {
 	{
 		// Styles
 		
-		this._gridLineColor = 0x444444;
+        this._gridLineColor = 0xAAAAAA;
 		this._gridLineOpacity = 1;
 		
 		this._defaultTextSize = 16;
@@ -109,23 +104,19 @@ class GraphView {
 		
 		this._psTable = {};	// Table for particle systems
 		this.dataProvider = null;
-		this._graphUtils = GraphUtils.create();
-		
-		//this._updateTimeCallback = ListenerFunctions.createListenerFunction(this, this._updateTime);
-		//this._updateAxesTextCallback = ListenerFunctions.createListenerFunction(this, this._updateAxesText);
-		//this._completeTimeCallback = ListenerFunctions.createListenerFunction(this, this._completeTime);		
-		
+        this._graphUtils = new GraphUtils();//GraphUtils.create();
+	    
 		this._xAxis = XAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._xAxis.updateAxesTextCallback = this._updateAxesText;//this._updateAxesTextCallback;
-		this._xAxis.updateTimeCallback = this._updateTime//this._updateTimeCallback;
+        this._xAxis.updateAxesTextCallback = this._updateAxesText;
+        this._xAxis.updateTimeCallback = this._updateTime;
 			
 		this._yAxis = YAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._yAxis.updateAxesTextCallback = this._updateAxesText;//this._updateAxesTextCallback;
-        this._yAxis.updateTimeCallback = this._updateTime//this._updateTimeCallback;
+        this._yAxis.updateAxesTextCallback = this._updateAxesText;
+        this._yAxis.updateTimeCallback = this._updateTime;
 		
 		this._zAxis = ZAxisComponent.create(this._axisLength, this._defaultTextSize);
-        this._zAxis.updateAxesTextCallback = this._updateAxesText;//this._updateAxesTextCallback;
-        this._zAxis.updateTimeCallback = this._updateTime//this._updateTimeCallback;
+        this._zAxis.updateAxesTextCallback = this._updateAxesText;
+        this._zAxis.updateTimeCallback = this._updateTime;
 		
 		this._offsetTop = 0;//window.innerHeight/4*3;
 		this._offsetLeft = 0;//window.innerWidth;
@@ -148,7 +139,7 @@ class GraphView {
 		//this._dynamicCameraPos = new THREE.Vector3(200, 100, 200);
 		
 		var distance = 2500;
-        this._camera = new THREE.CombinedCamera(window.innerWidth / 2, window.innerHeight / 2, 70, 1, distance, -distance, distance);//, distance);
+        this._camera = new THREE.CombinedCamera(window.innerWidth / 2, window.innerHeight / 2, 70, 1, distance, -distance, distance);
 
 		this._scene = new THREE.Scene();
 
@@ -160,30 +151,14 @@ class GraphView {
 		this._graphObjContainer.add(this._graphObj);
 		this._graphObj.position.x = -this._axisLength /2;
 		this._graphObj.position.y = -this._axisLength /2;
-		this._graphObj.position.z = this._axisLength /2;
-		
+        this._graphObj.position.z = this._axisLength / 2;
 
-		// Lights
-
-		var ambientLight = new THREE.AmbientLight( Math.random() * 0x10 );
-		this._scene.add( ambientLight );
-
-		var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
-		directionalLight.position.x = Math.random() - 0.5;
-		directionalLight.position.y = Math.random() - 0.5;
-		directionalLight.position.z = Math.random() - 0.5;
-		directionalLight.position.normalize();
-		this._scene.add( directionalLight );
-
-		var directionalLight = new THREE.DirectionalLight( Math.random() * 0xffffff );
-		directionalLight.position.x = Math.random() - 0.5;
-		directionalLight.position.y = Math.random() - 0.5;
-		directionalLight.position.z = Math.random() - 0.5;
-		directionalLight.position.normalize();
-		this._scene.add( directionalLight );		
+        // Lights
+        this._setupLights();	
 
 		//this._renderer = new THREE.CanvasRenderer();
-		this._renderer = new THREE.WebGLRenderer({ antialias: true } );
+        this._renderer = new THREE.WebGLRenderer({ antialias: true });
+        this._renderer.setClearColor(0xf0f0f0);
 		this._renderer.setSize( window.innerWidth, window.innerHeight );
 		
 		this._container.appendChild( this._renderer.domElement );
@@ -197,7 +172,27 @@ class GraphView {
 		var scope = this;
 		window.addEventListener( 'resize', function() { scope._onWindowResize() }, false );
 	}
-	
+
+    private _setupLights(): void {
+
+        var ambientLight = new THREE.AmbientLight(Math.random() * 0x10);
+        this._scene.add(ambientLight);
+
+        var directionalLight = new THREE.DirectionalLight(Math.random() * 0xffffff);
+        directionalLight.position.x = Math.random() - 0.5;
+        directionalLight.position.y = Math.random() - 0.5;
+        directionalLight.position.z = Math.random() - 0.5;
+        directionalLight.position.normalize();
+        this._scene.add(directionalLight);
+
+        var directionalLight = new THREE.DirectionalLight(Math.random() * 0xffffff);
+        directionalLight.position.x = Math.random() - 0.5;
+        directionalLight.position.y = Math.random() - 0.5;
+        directionalLight.position.z = Math.random() - 0.5;
+        directionalLight.position.normalize();
+        this._scene.add(directionalLight);	
+    }
+
 	private _onWindowResize = ():void => 
 	{
 		this._camera.setSize( window.innerWidth, window.innerHeight );
@@ -443,7 +438,7 @@ class GraphView {
 		//if (this._yAxis) 	this._graphObj.add(this._yAxis);
 		//if (this._zAxis) 	this._graphObj.add(this._zAxis);
 	}
-	
+	// Callback
 	public _updateTime = ():void => 
 	{
 		/*
@@ -487,7 +482,17 @@ class GraphView {
 		this._xAxis.updateAxis();
 		this._yAxis.updateAxis();
 		this._zAxis.updateAxis();
-	}
+    }
+    // Callback
+	public _updateAxesText = (): void => {
+        this._xAxis.updateAxisText();
+        this._yAxis.updateAxisText();
+        this._zAxis.updateAxisText();
+    }
+	// Callback
+	public _completeTime = (): void => {
+        this._freeRotate = true;
+    }
 	
 	public _updateGridLines(gridObj, gridAnimObj):void
 	{
@@ -521,18 +526,6 @@ class GraphView {
 				line.geometry.verticesNeedUpdate = true;
 			}				
 		}	
-	}
-	
-	public _updateAxesText = ():void =>
-	{
-		this._xAxis.updateAxisText();
-		this._yAxis.updateAxisText();
-		this._zAxis.updateAxisText();
-	}
-	
-	public _completeTime = ():void =>
-	{
-		this._freeRotate = true;
 	}
 	
 	public setFov( fov:number ):void
