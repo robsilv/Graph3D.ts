@@ -60,6 +60,7 @@ class XAxisComponent extends AxisComponent
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
 			
         var state = {
+            //position: new THREE.Vector3(centreOffset + this._axisLength / 2 - 150, -160, 0),
             position: new THREE.Vector3(centreOffset + this._axisLength / 2, -160, 0),
             rotation: new THREE.Vector3(0, 0, 0)
         };
@@ -68,7 +69,22 @@ class XAxisComponent extends AxisComponent
         console.log("getXTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
 
 		return state;
-	}
+    }
+    // protected - Used in Initial Render
+    public _getTitleInitAnimValues(state: any): any {
+
+        var mesh: THREE.Mesh = <THREE.Mesh>this.titleText.children[0];
+        var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
+
+        var obj = {
+            animLength: 1000,
+            animObj: { pX: state.position.x, opacity: 0 },
+            targObj: { pX: centreOffset + this._axisLength / 2, opacity: 1 }
+        };
+
+        return obj;
+    }
+
 	public _getTitleBottomState(text:THREE.Object3D):any
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
@@ -89,15 +105,6 @@ class XAxisComponent extends AxisComponent
 					animObj: { rX:Math.PI/2, opacity: 0, xAxisLength:0 },
 					targObj: {rX: 0, opacity: 1, xAxisLength: -20} };
 						
-		return obj;
-	}
-	// protected - Used in Initial Render
-	public _getTitleInitAnimValues(state:any):any
-	{
-		var obj = { animLength: 1000,
-					animObj: { pX:state.position.x-150 , opacity: 0 },
-					targObj: { pX:state.position.x, opacity: 1 } };
-			
 		return obj;
 	}
 		

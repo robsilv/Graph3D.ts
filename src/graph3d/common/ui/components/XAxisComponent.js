@@ -57,6 +57,7 @@ var XAxisComponent = (function (_super) {
         var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
 
         var state = {
+            //position: new THREE.Vector3(centreOffset + this._axisLength / 2 - 150, -160, 0),
             position: new THREE.Vector3(centreOffset + this._axisLength / 2, -160, 0),
             rotation: new THREE.Vector3(0, 0, 0)
         };
@@ -66,6 +67,21 @@ var XAxisComponent = (function (_super) {
 
         return state;
     };
+
+    // protected - Used in Initial Render
+    XAxisComponent.prototype._getTitleInitAnimValues = function (state) {
+        var mesh = this.titleText.children[0];
+        var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
+
+        var obj = {
+            animLength: 1000,
+            animObj: { pX: state.position.x, opacity: 0 },
+            targObj: { pX: centreOffset + this._axisLength / 2, opacity: 1 }
+        };
+
+        return obj;
+    };
+
     XAxisComponent.prototype._getTitleBottomState = function (text) {
         var mesh = text.children[0];
         var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
@@ -84,16 +100,6 @@ var XAxisComponent = (function (_super) {
             animLength: 150,
             animObj: { rX: Math.PI / 2, opacity: 0, xAxisLength: 0 },
             targObj: { rX: 0, opacity: 1, xAxisLength: -20 } };
-
-        return obj;
-    };
-
-    // protected - Used in Initial Render
-    XAxisComponent.prototype._getTitleInitAnimValues = function (state) {
-        var obj = {
-            animLength: 1000,
-            animObj: { pX: state.position.x - 150, opacity: 0 },
-            targObj: { pX: state.position.x, opacity: 1 } };
 
         return obj;
     };

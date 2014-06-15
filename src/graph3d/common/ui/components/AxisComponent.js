@@ -1,4 +1,4 @@
-﻿//var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.components");
+//var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.components");
 var AxisComponent = (function () {
     function AxisComponent(axisLength, defaultTextSize) {
         this._init(axisLength, defaultTextSize);

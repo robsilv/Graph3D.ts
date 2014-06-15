@@ -84,6 +84,7 @@ class ZAxisComponent extends AxisComponent
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
  
         var state = {
+            //position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset - 150),
             position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
             rotation: new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2)
         };
@@ -91,8 +92,23 @@ class ZAxisComponent extends AxisComponent
         console.log("getZTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
         console.log("getZTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
 			
-		return state;
-	}
+        return state;
+    }
+    // protected - Used in Initial Render
+    public _getTitleInitAnimValues(state: any): any {
+
+        var mesh: THREE.Mesh = <THREE.Mesh>this.titleText.children[0];
+        var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
+
+        var obj = {
+            animLength: 1000,
+            animObj: { pZ: state.position.z, opacity: 0 },
+            targObj: { pZ: -this._axisLength / 2 - centreOffset, opacity: 1 }
+        };
+
+        return obj;
+    }
+
     public _getTitleRightState(text:THREE.Object3D):any
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
@@ -116,16 +132,6 @@ class ZAxisComponent extends AxisComponent
         };
 
 		return state;	
-	}
-		
-	// protected - Used in Initial Render
-    public _getTitleInitAnimValues(state: any): any
-	{
-		var obj = { animLength: 1000,
-					animObj: { pZ:state.position.z-150 , opacity: 0 },
-					targObj: { pZ:state.position.z, opacity: 1 } };
-			
-		return obj;
 	}
 		
     public _getRightAxisAnimValues():any

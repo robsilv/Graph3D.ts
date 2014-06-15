@@ -83,6 +83,7 @@ var ZAxisComponent = (function (_super) {
         var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
 
         var state = {
+            //position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset - 150),
             position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
             rotation: new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2)
         };
@@ -92,6 +93,21 @@ var ZAxisComponent = (function (_super) {
 
         return state;
     };
+
+    // protected - Used in Initial Render
+    ZAxisComponent.prototype._getTitleInitAnimValues = function (state) {
+        var mesh = this.titleText.children[0];
+        var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
+
+        var obj = {
+            animLength: 1000,
+            animObj: { pZ: state.position.z, opacity: 0 },
+            targObj: { pZ: -this._axisLength / 2 - centreOffset, opacity: 1 }
+        };
+
+        return obj;
+    };
+
     ZAxisComponent.prototype._getTitleRightState = function (text) {
         var mesh = text.children[0];
         var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
@@ -113,16 +129,6 @@ var ZAxisComponent = (function (_super) {
         };
 
         return state;
-    };
-
-    // protected - Used in Initial Render
-    ZAxisComponent.prototype._getTitleInitAnimValues = function (state) {
-        var obj = {
-            animLength: 1000,
-            animObj: { pZ: state.position.z - 150, opacity: 0 },
-            targObj: { pZ: state.position.z, opacity: 1 } };
-
-        return obj;
     };
 
     ZAxisComponent.prototype._getRightAxisAnimValues = function () {
