@@ -1,5 +1,28 @@
 //var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.views");
 
+class LinesData {
+    public countriesTable: any;
+    public countriesArray: Array<CountryData>;
+
+    constructor() {
+        this.countriesTable = {};
+        this.countriesArray = [];
+    }
+}
+
+class LineValues {
+    public color: THREE.Color;
+    public z: Object;
+
+	public lineGeom: THREE.Geometry;
+    public particleGeom:THREE.Geometry;
+    public pointsData:Array<number>;
+
+    constructor() {
+        this.z = {};
+    }
+}
+
 class GraphView {
 
     // constants
@@ -619,6 +642,10 @@ class GraphView {
         //console.log("Z (Time) axis minVal "+this._zAxis.data.minVal+" maxVal "+this._zAxis.data.maxVal);
     }
 
+    // Called once on enable() after the graph has animated in.
+    // Sets up regionColors
+    // Sets up linesData
+    // Calls renderGraph()
 	private _plotData():void
 	{
 		// draw line for country
@@ -634,8 +661,8 @@ class GraphView {
 			color.setHex(regionColors[i]);
 			this._regionColors[region.name] = color;
 		}
-		
-		this._linesData = { countriesTable: {}, countriesArray: [] };
+
+        this._linesData = new LinesData();
 		
 		for ( var countryName in this._dataProvider.countries ) 
 		{
@@ -643,6 +670,7 @@ class GraphView {
 			color = this._regionColors[country.region.name];
 			//var color = new THREE.Color();
 			//color.setHSV(Math.random(), 1.0, 1.0);
+
 			var lineValues = this._plotLine(country, color, this._axisTitles.x, this._axisTitles.y);
 			lineValues.color = color;
 			
@@ -687,7 +715,7 @@ class GraphView {
 		//scope._renderZSlice();
 	}
 	
-	// Re-renders all of the points on the graph at a particular time-step.
+	// Renders all of the points on the graph at a particular time-step.
 	private _renderGraph():void
 	{
 		// Each country needs it's own particle system (PS)
@@ -856,16 +884,16 @@ class GraphView {
 		}
 	}
 	
-	private _plotLine(data:CountryData, color:THREE.Color, xTitle:string, yTitle:string):any
+	private _plotLine(data:CountryData, color:THREE.Color, xTitle:string, yTitle:string):LineValues
 	{
 		var minZ = this._zAxis.data.minVal;
 		var maxZ = this._zAxis.data.maxVal;
-		
-		// massage data
-		// Z-Axis is the axis that X and Y data are plotted against.
-		// Loop through the X and Y axes data for the line, storing them on a new object in terms of Z.
-		
-		var lineValues:any = { z: {} };
+
+        // massage data
+        // Z-Axis is the axis that X and Y data are plotted against.
+        // Loop through the X and Y axes data for the line, storing them on a new object in terms of Z.
+
+        var lineValues = new LineValues();
 		for ( var zVal in data[xTitle] )
 		{
 			if ( zVal < minZ || zVal > maxZ ) continue;
@@ -891,12 +919,12 @@ class GraphView {
 			lineValues.z[zVal].y = value;
 		}
 		
-		var colors = [];
+		var colors:Array<THREE.Color> = [];
 		
 		//init Particles
 		var lineGeom = new THREE.Geometry();
 		var particleGeom = new THREE.Geometry();
-		var pointsData = [];
+		var pointsData:Array<number> = [];
 
 		var prevYValue = 0;
 		var prevXValue = 0;
