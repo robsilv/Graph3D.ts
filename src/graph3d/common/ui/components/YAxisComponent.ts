@@ -8,18 +8,6 @@ class YAxisComponent extends AxisComponent
         //this._init(axisLength, defaultTextSize);
 	}
 	
-    public static create(axisLength:number, defaultTextSize:number):YAxisComponent 
-	{
-		var newInstance = new YAxisComponent(axisLength, defaultTextSize);
-		return newInstance;
-	}
-		
-	//private _init(axisLength, defaultTextSize) 
-	//{
-	//	this._axisLength = axisLength;
-	//	this._defaultTextSize = defaultTextSize;
-	//}
-		
 	public destroy():void 
 	{
         super.destroy();

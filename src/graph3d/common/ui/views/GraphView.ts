@@ -65,7 +65,7 @@ class GraphView {
     private _mouseUpListener: EventListener;
     private _mouseOutListener: EventListener;
 
-    private _dataProvider;
+    private _dataProvider: GlobalData;
     private _axisTitles: any;
 
     private _regionColors: any;
@@ -96,15 +96,15 @@ class GraphView {
 		this.dataProvider = null;
         this._graphUtils = new GraphUtils();//GraphUtils.create();
 	    
-		this._xAxis = XAxisComponent.create(this._axisLength, this._defaultTextSize);
+		this._xAxis = new XAxisComponent(this._axisLength, this._defaultTextSize);
         this._xAxis.updateAxesTextCallback = this._updateAxesText;
         this._xAxis.updateTimeCallback = this._updateTime;
 			
-		this._yAxis = YAxisComponent.create(this._axisLength, this._defaultTextSize);
+		this._yAxis = new YAxisComponent(this._axisLength, this._defaultTextSize);
         this._yAxis.updateAxesTextCallback = this._updateAxesText;
         this._yAxis.updateTimeCallback = this._updateTime;
 		
-		this._zAxis = ZAxisComponent.create(this._axisLength, this._defaultTextSize);
+		this._zAxis = new ZAxisComponent(this._axisLength, this._defaultTextSize);
         this._zAxis.updateAxesTextCallback = this._updateAxesText;
         this._zAxis.updateTimeCallback = this._updateTime;
 		
@@ -563,11 +563,12 @@ class GraphView {
 		this._renderer.render( this._scene, this._camera );
 	}
 
-    public setDataProvider(data): void {
+    public setDataProvider(data:GlobalData): void {
         var numSteps = 20;
 
         this._dataProvider = data;
 
+        // SET AXES SELECTIONS
         var zMin = 1990;
         //var zMin = data.time.minYear;
         var zMax = 2010;
@@ -627,8 +628,8 @@ class GraphView {
 		this._regionColors = {};
 		for ( var i = 0; i < this._dataProvider.regions.length; i ++ )
 		{
-			var region = this._dataProvider.regions[i];
-			var color = new THREE.Color();
+			var region:RegionData = this._dataProvider.regions[i];
+			var color:THREE.Color = new THREE.Color();
 			//color.setHSV(Math.random(), 1.0, 1.0);
 			color.setHex(regionColors[i]);
 			this._regionColors[region.name] = color;
@@ -638,7 +639,7 @@ class GraphView {
 		
 		for ( var countryName in this._dataProvider.countries ) 
 		{
-			var country = this._dataProvider.countries[countryName];
+			var country:CountryData = this._dataProvider.countries[countryName];
 			color = this._regionColors[country.region.name];
 			//var color = new THREE.Color();
 			//color.setHSV(Math.random(), 1.0, 1.0);
@@ -855,7 +856,7 @@ class GraphView {
 		}
 	}
 	
-	private _plotLine(data, color, xTitle, yTitle):any
+	private _plotLine(data:CountryData, color:THREE.Color, xTitle:string, yTitle:string):any
 	{
 		var minZ = this._zAxis.data.minVal;
 		var maxZ = this._zAxis.data.maxVal;

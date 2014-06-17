@@ -1,12 +1,23 @@
 //var namespace = GRAPH3D.namespace("GRAPH3D.common.ui.components");
-	
+class AxisData {
+    public base: number;
+    public baseLog: number;
+    public minVal: number;
+    public maxVal: number;
+    public numLogSteps: number;
+    public numSteps: number;
+    public numFractionalSteps: number;
+    public stepSize: number;
+    public logarithmic: boolean;
+}
+
 class AxisComponent {
 
     private _textColor: number;
     private _markerLineColor: number;
     private _markerLineOpacity: number;
 
-    public data:any;
+    public data: AxisData; // set in GraphView.setDataProvider
 
     public _axisLength: number; //protected
     public _defaultTextSize: number; //protected
@@ -40,11 +51,7 @@ class AxisComponent {
 		this._textColor = 0xAAAAAA;
 		this._markerLineColor = 0xCCCCCC;
 		this._markerLineOpacity = 1;
-			
-		//
-			
-		this.data = {};
-			
+
 		this._axisLength = axisLength;
 		this._defaultTextSize = defaultTextSize;
 			
@@ -54,8 +61,6 @@ class AxisComponent {
 		this.titleText = null;
 		this.animationValues = { lines: [], text: [], markers: [], titleText: {}, container: {} };
 		this.container = new THREE.Object3D();
-			
-		this.data = null; // graph data
 	}
 		
 	public destroy():void 

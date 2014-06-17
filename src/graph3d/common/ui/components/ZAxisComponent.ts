@@ -7,18 +7,6 @@ class ZAxisComponent extends AxisComponent
         super(axisLength, defaultTextSize);
 		//this._init(axisLength, defaultTextSize);
     }
-        	
-	public static create(axisLength:number, defaultTextSize:number):ZAxisComponent 
-	{
-		var newInstance = new ZAxisComponent(axisLength, defaultTextSize);
-		return newInstance;
-	}
-		
-	//private _init(axisLength, defaultTextSize) 
-	//{
-	//	this._axisLength = axisLength;
-	//	this._defaultTextSize = defaultTextSize;
-	//}
 		
 	public destroy():void 
 	{

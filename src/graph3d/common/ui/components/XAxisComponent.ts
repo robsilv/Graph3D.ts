@@ -8,18 +8,6 @@ class XAxisComponent extends AxisComponent
 		//this._init(axisLength, defaultTextSize);
 	}
 		
-    public static create(axisLength:number, defaultTextSize:number):XAxisComponent
-	{
-		var newInstance = new XAxisComponent(axisLength, defaultTextSize);
-		return newInstance;
-	}
-		
-	//private _init(axisLength, defaultTextSize) 
-	//{
-	//	this._axisLength = axisLength;
-	//	this._defaultTextSize = defaultTextSize;
-	//}
-		
 	public destroy():void 
 	{
         super.destroy();
