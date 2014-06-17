@@ -65,7 +65,7 @@
         }
 
 		// TODO: numFractionalSteps can be determined by comparing the minVal to Math.pow(1/base, n)
-        public mapToAxisLogarithmic(minVal: number, maxVal: number, numFractionalSteps: number, base) {
+        public mapToAxisLogarithmic(minVal: number, maxVal: number, numFractionalSteps: number, base :number) {
             var diff = maxVal - minVal;
 
             var numLogSteps = this.getLogOfBase(diff, base);

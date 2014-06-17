@@ -28,10 +28,6 @@ class GraphView {
     private dataProvider;
     private _graphUtils: GraphUtils;
 
-    //private _updateTimeCallback: Function;
-    //private _updateAxesTextCallback: Function;
-    //private _completeTimeCallback: Function;
-
     private _xAxis: XAxisComponent;
     private _yAxis: YAxisComponent;
     private _zAxis: ZAxisComponent;
@@ -81,12 +77,6 @@ class GraphView {
         this._init();
         this._animate();
     }
-
-	public static create():GraphView 
-	{
-		var newGraphView = new GraphView();
-		return newGraphView;
-	}
 	
 	private _init():void
 	{
@@ -585,16 +575,17 @@ class GraphView {
 
         this._axisTitles = {};
         this._axisTitles.x = "gdpPerCapita";
-        this._axisTitles.y = "hivPrevalence";
-        //this._axisTitles.y = "lifeExpectancy";
+        this._axisTitles.y = "lifeExpectancy";
         this._axisTitles.z = "time";
+        //this._axisTitles.z = "hivPrevalence";
+
         this._axisTitles.xTitle = "GDP Per Capita (2005 Int $)";
-        this._axisTitles.yTitle = "Estimated HIV Prevalence % (Ages 15-49)";
-        //this._axisTitles.yTitle = "Life Expectancy at Birth";
+        this._axisTitles.yTitle = "Life Expectancy at Birth";
+        //this._axisTitles.zTitle = "Estimated HIV Prevalence % (Ages 15-49)";
         this._axisTitles.zTitle = "Time";
 
         var xAxisLog = true;
-        var yAxisLog = true;
+        var yAxisLog = false;
         var zAxisLog = false;
 
         // Compute Axes
@@ -617,6 +608,7 @@ class GraphView {
             this._zAxis.data = this._graphUtils.mapToAxisLogarithmic(data[this._axisTitles.z].minValue, data[this._axisTitles.z].maxValue, 0, 10);
         } else {
             this._zAxis.data = this._graphUtils.mapToAxisLinear(zMin, zMax, numSteps, true);
+           //this._zAxis.data = this._graphUtils.mapToAxisLinear(data[this._axisTitles.z].minValue, data[this._axisTitles.z].maxValue, numSteps, true);
         }
 
         //this._graphUtils.getLogOfBase(100, 10, true);
@@ -660,7 +652,7 @@ class GraphView {
 		//this._renderAllLines();
 		//this._renderLineByLine();
 		//this._stepThroughZAxis();
-		this._renderZSlice();
+		this._renderGraph();
 	}
 	
 	// Renders all line immediately
@@ -689,13 +681,13 @@ class GraphView {
 		this._currentZIndex = 0;
 		
 		var scope = this;
-		this._renderDataInterval = setInterval( function() { scope._renderZSlice() }, 1000);
+		this._renderDataInterval = setInterval( function() { scope._renderGraph() }, 1000);
 		
 		//scope._renderZSlice();
 	}
 	
-	
-	private _renderZSlice():void
+	// Re-renders all of the points on the graph at a particular time-step.
+	private _renderGraph():void
 	{
 		// Each country needs it's own particle system (PS)
 		// The PS will contain only one particle, which will animate it's position and size over time (all particles in a PS must be the same size)
@@ -716,10 +708,10 @@ class GraphView {
 			// get the line data (geom, color) for the country
 			var lineValues = this._linesData.countriesTable[countryName];
 
-			var vertices = lineValues.particleGeom.vertices;
+			var vertices:Array<THREE.Vector3> = lineValues.particleGeom.vertices;
 			
 			// get the vector3 point at the currentParticleIndex (this step on the Z slice)
-			var vector3 = vertices[this._currentZIndex];
+			var vector3:THREE.Vector3 = vertices[this._currentZIndex];
 			// If the country has a particle for this step, add it to the current geom and step the index.
 			// If it doesn't, skip the country.
 			if ( vector3 ) 
@@ -736,7 +728,7 @@ class GraphView {
 			}
 		}
 		
-		console.log("max infected "+maxInfectedCountry+" = "+maxNumInfected);
+		//console.log("max infected "+maxInfectedCountry+" = "+maxNumInfected);
 		
 		
 		var maxVerticesLength = 0;
@@ -747,13 +739,13 @@ class GraphView {
 			// get the line data (geom, color) for the country
 			var lineValues = this._linesData.countriesTable[countryName];
 
-			var vertices = lineValues.particleGeom.vertices;
+			var vertices:Array<THREE.Vector3> = lineValues.particleGeom.vertices;
 			if ( vertices.length > maxVerticesLength ) {
 				maxVerticesLength = vertices.length;
 			}
 			
 			// get the vector3 point at the currentParticleIndex (this step on the Z slice)
-			var vector3 = vertices[this._currentZIndex];
+			var vector3:THREE.Vector3 = vertices[this._currentZIndex];
 			// If the country has a particle for this step, add it to the current geom and step the index.
 			// If it doesn't, skip the country.
 			if ( vector3 ) 
@@ -801,12 +793,11 @@ class GraphView {
 				psObj.pSystem.material.size = size;
 				
 			} else {
-				console.log("NO VECTOR "+countryName);
+				console.log("No vector3 "+countryName);
 			}
 		}
 
-		if ( this._currentZIndex < maxVerticesLength + 1 )
-		{
+		if ( this._currentZIndex < maxVerticesLength + 1 ) {
 			this._currentZIndex ++;			
 		} else {
 			clearInterval(this._renderDataInterval);
