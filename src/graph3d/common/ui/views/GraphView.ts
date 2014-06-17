@@ -12,15 +12,19 @@ class LinesData {
 
 class LineValues {
     public color: THREE.Color;
-    public z: Object;
+    public time: Object; // the timestep (e.g. the year) which the graph renders at
 
 	public lineGeom: THREE.Geometry;
     public particleGeom:THREE.Geometry;
     public pointsData:Array<number>;
 
     constructor() {
-        this.z = {};
+        this.time = {};
     }
+}
+
+class ParticleSystemData {
+    public pSystem: THREE.ParticleSystem;
 }
 
 class GraphView {
@@ -671,7 +675,7 @@ class GraphView {
 			//var color = new THREE.Color();
 			//color.setHSV(Math.random(), 1.0, 1.0);
 
-			var lineValues = this._plotLine(country, color, this._axisTitles.x, this._axisTitles.y);
+			var lineValues = this._plotLine(country, color, this._axisTitles.x, this._axisTitles.y, this._axisTitles.z);
 			lineValues.color = color;
 			
 			this._linesData.countriesTable[countryName] = lineValues;
@@ -735,7 +739,7 @@ class GraphView {
 		for ( var countryName in this._linesData.countriesTable ) 
 		{
 			// get the line data (geom, color) for the country
-			var lineValues = this._linesData.countriesTable[countryName];
+			var lineValues:LineValues = this._linesData.countriesTable[countryName];
 
 			var vertices:Array<THREE.Vector3> = lineValues.particleGeom.vertices;
 			
@@ -746,9 +750,9 @@ class GraphView {
 			if ( vector3 ) 
 			{
 				var country = this._dataProvider.countries[countryName];
-				var zVal = lineValues.pointsData[this._currentZIndex];
-				var yVal = lineValues.z[zVal].y;
-				var pop = this._dataProvider.countries[countryName].population[zVal];
+				var timeVal = lineValues.pointsData[this._currentZIndex];
+				var yVal = lineValues.time[timeVal].y;
+				var pop:number = this._dataProvider.countries[countryName].population[timeVal];
 				var numInfected = Math.round(yVal / 100 * pop);
 				if ( numInfected > maxNumInfected ) {
 					maxNumInfected = numInfected;
@@ -766,7 +770,7 @@ class GraphView {
 		for ( var countryName in this._linesData.countriesTable ) 
 		{
 			// get the line data (geom, color) for the country
-			var lineValues = this._linesData.countriesTable[countryName];
+			var lineValues:LineValues = this._linesData.countriesTable[countryName];
 
 			var vertices:Array<THREE.Vector3> = lineValues.particleGeom.vertices;
 			if ( vertices.length > maxVerticesLength ) {
@@ -786,13 +790,13 @@ class GraphView {
 					geom.colors = [lineValues.particleGeom.colors[this._currentZIndex]];
 					geom.vertices.push(vector3.clone());
 					
-                    var psObj:any = this._psTable[countryName] = {};
+                    var psObj: ParticleSystemData = this._psTable[countryName] = new ParticleSystemData();
 					psObj.pSystem = this._createParticles(geom);
 					this._graphObj.add(psObj.pSystem);
 					
 					//psObj.pSystem.material.size = Math.random() * 20 + 10;
 				} else {
-					var psObj = this._psTable[countryName];
+                    var psObj: ParticleSystemData = this._psTable[countryName];
 					geom = psObj.pSystem.geometry;
 					var currVector3 = geom.vertices[0];
 					currVector3.x = vector3.x;
@@ -803,10 +807,10 @@ class GraphView {
 				}
 				
 				var country = this._dataProvider.countries[countryName];
-				var zVal = lineValues.pointsData[this._currentZIndex];
-				var xVal = lineValues.z[zVal].x;
-				var yVal = lineValues.z[zVal].y;
-				var pop = this._dataProvider.countries[countryName].population[zVal];
+				var timeVal = lineValues.pointsData[this._currentZIndex];
+				//var xVal = lineValues.time[timeVal].x;
+				var yVal = lineValues.time[timeVal].y;
+				var pop:number = this._dataProvider.countries[countryName].population[timeVal];
 				var infected = Math.round(yVal / 100 * pop);
 				//console.log(countryName+" year "+zVal+" gdp "+xVal+" pcHIV "+yVal+" pop "+pop+" infected "+infected);
 				var minSize = 8;
@@ -818,8 +822,10 @@ class GraphView {
 				}
 				
 				size = Math.max(minSize, size);
-				
-				psObj.pSystem.material.size = size;
+
+                //psObj.pSystem.material.size = size;
+                var psMaterial = <THREE.ParticleSystemMaterial>psObj.pSystem.material;
+                psMaterial.size = size;
 				
 			} else {
 				console.log("No vector3 "+countryName);
@@ -884,41 +890,58 @@ class GraphView {
 		}
 	}
 	
-	private _plotLine(data:CountryData, color:THREE.Color, xTitle:string, yTitle:string):LineValues
+	private _plotLine(data:CountryData, color:THREE.Color, xTitle:string, yTitle:string, zTitle:string):LineValues
 	{
-		var minZ = this._zAxis.data.minVal;
-		var maxZ = this._zAxis.data.maxVal;
+        var minTime = 1990;//this._timeAxis.data.minVal;
+        var maxTime = 2010;//this._timeAxis.data.maxVal;
 
         // massage data
         // Z-Axis is the axis that X and Y data are plotted against.
         // Loop through the X and Y axes data for the line, storing them on a new object in terms of Z.
 
         var lineValues = new LineValues();
-		for ( var zVal in data[xTitle] )
-		{
-			if ( zVal < minZ || zVal > maxZ ) continue;
+        // Store x values
+        for (var timeVal in data[xTitle])
+        {
+            // Only account for time values within the defined range
+			if ( timeVal < minTime || timeVal > maxTime ) continue;
 			
-			var value = data[xTitle][zVal];
+            // e.g. value = data[gdpPerCapita][1981]
+			var value: number = data[xTitle][timeVal];
 			
-			if (!lineValues.z[zVal]) {
-				lineValues.z[zVal] = {};
+			if (!lineValues.time[timeVal]) {
+				lineValues.time[timeVal] = {};
 			}
 			
-			lineValues.z[zVal].x = value;
+			lineValues.time[timeVal].x = value;
 		}
-		
-		for ( var zVal in data[yTitle] )
-		{
-			if ( zVal < minZ || zVal > maxZ ) continue;
+		// Store y values
+		for ( var timeVal in data[yTitle] )
+        {
+            // Only account for time values within the defined range
+			if ( timeVal < minTime || timeVal > maxTime ) continue;
 			
-			var value = data[yTitle][zVal];
-			if (!lineValues.z[zVal]) {
-				lineValues.z[zVal] = {};
+			var value: number = data[yTitle][timeVal];
+			if (!lineValues.time[timeVal]) {
+				lineValues.time[timeVal] = {};
 			}
 			
-			lineValues.z[zVal].y = value;
+			lineValues.time[timeVal].y = value;
 		}
-		
+        // Store z values
+        for (var timeVal in data[zTitle]) {
+
+            // Only account for time values within the defined range
+            if (timeVal < minTime || timeVal > maxTime) continue;
+
+            var value: number = data[zTitle][timeVal];
+            if (!lineValues.time[timeVal]) {
+                lineValues.time[timeVal] = {};
+            }
+
+            lineValues.time[timeVal].z = value;
+        }
+        		
 		var colors:Array<THREE.Color> = [];
 		
 		//init Particles
@@ -927,20 +950,23 @@ class GraphView {
 		var pointsData:Array<number> = [];
 
 		var prevYValue = 0;
-		var prevXValue = 0;
+        var prevXValue = 0;
+        var prevZValue = 0;
 		var i = 0;
 		
-		for ( var z in lineValues.z )
+		for ( var timeVal in lineValues.time )
 		{
-			var x = lineValues.z[z].x;
-			var y = lineValues.z[z].y;
+			var x: number = lineValues.time[timeVal].x;
+            var y: number = lineValues.time[timeVal].y;
+            var z: number = lineValues.time[timeVal].z;
 			//console.log(z+" = "+value);
 					
 			if (!x) 	x = prevXValue;
 			else		prevXValue = x;
 			if (!y) 	y = prevYValue;
 			else		prevYValue = y;
-			
+            if (!z)     z = prevZValue;
+            else        prevZValue = z;
 			
 			// XPOS
 			if ( this._xAxis.data.logarithmic ) {
@@ -960,9 +986,9 @@ class GraphView {
 
 			// ZPOS
 			if ( this._zAxis.data.logarithmic ) {
-				var zpos = this._graphUtils.getPosAlongAxisLogarithmic( z, this._axisLength, this._zAxis.data.numSteps, this._zAxis.data.base, this._zAxis.data.baseLog, this._zAxis.data.numFractionalSteps );
+				var zpos = this._graphUtils.getPosAlongAxisLogarithmic( timeVal, this._axisLength, this._zAxis.data.numSteps, this._zAxis.data.base, this._zAxis.data.baseLog, this._zAxis.data.numFractionalSteps );
 			} else  {
-				var ratio = this._graphUtils.getRatioAlongAxisLinear( z, this._zAxis.data.minVal, this._zAxis.data.maxVal );
+				var ratio = this._graphUtils.getRatioAlongAxisLinear( timeVal, this._zAxis.data.minVal, this._zAxis.data.maxVal );
 				var zpos = -ratio * this._axisLength;
 			}
 			
@@ -970,7 +996,7 @@ class GraphView {
 			particleGeom.vertices.push(pos);
 			lineGeom.vertices.push(pos);
 			
-			pointsData.push(z);
+			pointsData.push(timeVal);
 			
 			colors.push(color);		
 			i ++;
