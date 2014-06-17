@@ -57,8 +57,8 @@ class TextLoader extends EventDispatcher {
 	}
 		
 	private _onReadyStateChange() {
-		console.log("GRAPH3D.utils.loading.TextLoader::_onReadyStateChange");
-		console.log(this._url, this._loader.readyState, this._loader.status);
+		//console.log("GRAPH3D.utils.loading.TextLoader::_onReadyStateChange");
+		//console.log(this._url, this._loader.readyState, this._loader.status);
 		switch(this._loader.readyState) {
 			case 0: //Uninitialized
 			case 1: //Set up

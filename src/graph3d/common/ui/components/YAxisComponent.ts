@@ -55,8 +55,8 @@ class YAxisComponent extends AxisComponent
         var state = new AxisState(new THREE.Vector3(-120, centreOffset + this._axisLength / 2, 0),
                                   new THREE.Euler(0, 0, Math.PI / 2));
 
-        console.log("getYTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
-        console.log("getYTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
+        //console.log("getYTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
+        //console.log("getYTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
 
 		return state;
     }

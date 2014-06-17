@@ -54,12 +54,12 @@
                 if (stepVal >= maxVal) {
                     maxNumSteps = i;
                     finalMaxVal = stepVal;
-                    console.log("maxStep " + stepVal + " finalMaxVal " + finalMaxVal + " i " + i);
+                   // console.log("maxStep " + stepVal + " finalMaxVal " + finalMaxVal + " i " + i);
                     break;
                 }
             }
 
-            console.log("minVal " + minVal + " maxVal " + maxVal + " numSteps " + maxNumSteps + " stepSize " + stepSize);
+            //console.log("minVal " + minVal + " maxVal " + maxVal + " numSteps " + maxNumSteps + " stepSize " + stepSize);
 
             var axisData: AxisData = new AxisData();
             axisData.minVal = graphMinVal;

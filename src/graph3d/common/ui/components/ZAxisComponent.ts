@@ -67,8 +67,8 @@ class ZAxisComponent extends AxisComponent
         var state = new AxisState(new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
                                   new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2));
 
-        console.log("getZTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
-        console.log("getZTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
+        //console.log("getZTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
+        //console.log("getZTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
 			
         return state;
     }

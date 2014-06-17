@@ -46,8 +46,8 @@ class XAxisComponent extends AxisComponent
         var state = new AxisState(new THREE.Vector3(centreOffset + this._axisLength / 2, -160, 0),
                                   new THREE.Euler(0, 0, 0));
 
-        console.log("getXTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " +state.position.z);
-        console.log("getXTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
+        //console.log("getXTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " +state.position.z);
+        //console.log("getXTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
 
 		return state;
     }

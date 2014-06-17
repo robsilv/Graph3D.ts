@@ -205,7 +205,7 @@ class DataModel extends EventDispatcher {
 								this._global.countries[country] = countryObj;
 							}
 						} else {
-							console.log("NO REGION "+j+" country "+column[j]);
+							//console.log("NO REGION "+j+" country "+column[j]);
 						}
 					}
 				}
@@ -232,7 +232,7 @@ class DataModel extends EventDispatcher {
 			titles.push(column[i]);        
 		}
 		
-		console.log("Column Titles "+titles);
+		//console.log("Column Titles "+titles);
 		
 		// loop through all rows
 		for (var i = 0; i < rows.length; i++) {
@@ -312,7 +312,7 @@ class DataModel extends EventDispatcher {
 					}
 				}
 			} else {
-				console.log("Entry for \""+rowTitle+"\" in Pop.csv but not in XXX.csv");
+				//console.log("Entry for \""+rowTitle+"\" in Pop.csv but not in XXX.csv");
 			}
 		}
 	}
