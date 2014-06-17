@@ -11,6 +11,12 @@ class AxisData {
     public logarithmic: boolean;
 }
 
+class AxisState {
+    constructor(public position: THREE.Vector3, public rotation: THREE.Euler) {
+
+    }
+}
+
 class AxisComponent {
 
     private _textColor: number;
@@ -369,40 +375,37 @@ class AxisComponent {
 		
 	// data ===========================================
     // protected - for override
-    public _getAxisInitState(): any
+    public _getAxisInitState(): AxisState
 	{
-		var state:Object = { position: new THREE.Vector3(0, 0, 0),
-						rotation: new THREE.Vector3(0, 0, 0) };
-
-		return state;	
-	}
+        return new AxisState(new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, 0));
+    }
+    // protected - for override 
+    public _getMarkerInitState(text): AxisState {
+        return null;
+    }
+    // protected - for override 
+    public _getTitleInitState(text): AxisState {
+        return null;
+    }
 	// protected - for override 
 	public _getAxisMarkerPos(step) {
 		return null;
     }
     // protected - for override 
-    public _getMarkerInitState(text) {
+    public _getMarkerInitAnimValues(): any {	
 		return null;
     }
     // protected - for override 
-    public _getMarkerInitAnimValues() {	
+    public _getTitleInitAnimValues(state:AxisState):any {
 		return null;
     }
     // protected - for override 
-    public _getTitleInitState(text) {
-		return null;
-    }
-    // protected - for override 
-    public _getTitleInitAnimValues(state) {
-		return null;
-    }
-    // protected - for override 
-    public _getInitAxisAnimValues() {
+    public _getInitAxisAnimValues(): any {
         return null;
     }
 		
     // protected
-	public _getTextAnimValues(text:THREE.Object3D, state:any):Object
+	public _getTextAnimValues(text:THREE.Object3D, state:AxisState):Object
 	{
 		//var state = this._getMarkerInitState(text);
 			
@@ -418,7 +421,7 @@ class AxisComponent {
 		return obj;
 	}
 	// protected
-	public _getTitleAnimValues(text:THREE.Object3D, state:any)
+	public _getTitleAnimValues(text:THREE.Object3D, state:AxisState):any
 	{
 		//var state = this._getMarkerInitState(text);
 			

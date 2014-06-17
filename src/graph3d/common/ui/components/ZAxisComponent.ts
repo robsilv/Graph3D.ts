@@ -20,39 +20,32 @@ class ZAxisComponent extends AxisComponent
 		return new THREE.Vector3(0, 0, -step );
     }
     // protected
-	public _getMarkerInitState(text:THREE.Object3D):any
+    public _getMarkerInitState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var rightOffset = -1 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
-    
-        var state: Object = {
-            position: new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
-            rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
-        };
 
+        var state = new AxisState(new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
+                                  new THREE.Euler(Math.PI / 2, 0, 0));
 		return state;
 	}
-    public _getMarkerRightState(text:THREE.Object3D):any
+    public _getMarkerRightState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var rightOffset = -1 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
-		
-        var state: Object = {
-            position: new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
-            rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
-        };
+
+        var state = new AxisState(new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
+                                  new THREE.Euler(Math.PI / 2, 0, 0));
 
         return state;
 	}
-    public _getMarkerBottomState(text:THREE.Object3D):any
+    public _getMarkerBottomState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var rightOffset = -1 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
-			
-        var state: Object = {
-            position: new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
-            rotation: new THREE.Vector3(Math.PI / 2, 0, 0)
-        };
+
+        var state = new AxisState(new THREE.Vector3(rightOffset - 40, 0, -this._defaultTextSize / 2),
+                                  new THREE.Euler(Math.PI / 2, 0, 0));
 
 		return state;
 	}
@@ -66,16 +59,13 @@ class ZAxisComponent extends AxisComponent
 		return obj;
 	}
 	// protected	
-	public _getTitleInitState(text:THREE.Object3D):any
+    public _getTitleInitState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
- 
-        var state = {
-            //position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset - 150),
-            position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
-            rotation: new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2)
-        };
+
+        var state = new AxisState(new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
+                                  new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2));
 
         console.log("getZTitleInitState p: x " + state.position.x + " y " + state.position.y + " z " + state.position.z);
         console.log("getZTitleInitState r: x " + state.rotation.x + " y " + state.rotation.y + " z " + state.rotation.z);
@@ -83,7 +73,7 @@ class ZAxisComponent extends AxisComponent
         return state;
     }
     // protected - Used in Initial Render
-    public _getTitleInitAnimValues(state: any): any {
+    public _getTitleInitAnimValues(state: AxisState): any {
 
         var mesh: THREE.Mesh = <THREE.Mesh>this.titleText.children[0];
         var centreOffset = -0.5 * (mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x);
@@ -97,27 +87,23 @@ class ZAxisComponent extends AxisComponent
         return obj;
     }
 
-    public _getTitleRightState(text:THREE.Object3D):any
+    public _getTitleRightState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
-			
-        var state = {
-            position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
-            rotation: new THREE.Vector3(Math.PI / 2, 0, Math.PI + Math.PI / 2)
-        };
+
+        var state = new AxisState(new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
+                                  new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2));
 
 		return state;	
 	}
-    public _getTitleBottomState(text:THREE.Object3D):any
+    public _getTitleBottomState(text: THREE.Object3D): AxisState
     {
         var mesh: THREE.Mesh = <THREE.Mesh>text.children[0];
 		var centreOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
-			
-        var state = {
-            position: new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
-            rotation: new THREE.Vector3(Math.PI / 2, 0, Math.PI + Math.PI / 2)
-        };
+
+        var state = new AxisState(new THREE.Vector3(-120, 0, -this._axisLength / 2 - centreOffset),
+                                  new THREE.Euler(Math.PI / 2, 0, Math.PI + Math.PI / 2));
 
 		return state;	
 	}
@@ -149,12 +135,9 @@ class ZAxisComponent extends AxisComponent
 		return obj;
 	}
 	// protected	
-	public _getAxisInitState():any
+    public _getAxisInitState(): AxisState
 	{
-		var state = { position: new THREE.Vector3(0, 0, 0),
-						rotation: new THREE.Vector3(0, 0, Math.PI/2) };
-
-		return state;	
+        return new AxisState(new THREE.Vector3(0, 0, 0), new THREE.Euler(0, 0, Math.PI / 2));	
 	}
 		
 	//ANIMATIONS =====================================
